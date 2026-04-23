@@ -19,7 +19,14 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10' # 원하는 파이썬 버전으로 설정
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
 
     - name: Run main.py
+      env:
+        # GitHub Settings에 등록한 Secret을 환경변수로 주입합니다.
+        # python-dotenv가 이 환경변수를 자동으로 인식합니다.
+        DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       run: python main.py

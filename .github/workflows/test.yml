@@ -1,12 +1,8 @@
 name: Python Test
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # 웹사이트의 Actions 탭에서 수동으로 버튼을 눌러 실행하도록 변경합니다.
+  workflow_dispatch:
 
 jobs:
   build-and-test:

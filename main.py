@@ -1,6 +1,10 @@
 import discord
 from discord.ext import commands
 import os
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 # 기본 인텐트 설정
 intents = discord.Intents.default()
@@ -25,13 +29,11 @@ async def hello(ctx):
     await ctx.send(f'안녕하세요, {ctx.author.name}님! 디스코드 봇 테스트 중입니다.')
 
 if __name__ == "__main__":
-    # 환경변수에서 디스코드 토큰을 가져옵니다. 
-    # 로컬 테스트 시에는 '여기에_봇_토큰_입력' 부분을 실제 토큰으로 변경하거나 
-    # 터미널에서 export DISCORD_BOT_TOKEN="내토큰" 을 입력하세요.
-    TOKEN = os.environ.get('DISCORD_BOT_TOKEN', '여기에_봇_토큰_입력')
+    # 환경변수에서 디스코드 토큰을 가져옵니다.
+    TOKEN = os.getenv('DISCORD_BOT_TOKEN')
     
-    if TOKEN and TOKEN != '여기에_봇_토큰_입력':
+    if TOKEN and TOKEN != 'your_token_here':
         bot.run(TOKEN)
     else:
         print("오류: 디스코드 봇 토큰이 설정되지 않았습니다.")
-        print("os.environ.get 에 토큰을 입력하거나 DISCORD_BOT_TOKEN 환경변수를 설정해주세요.")
+        print(".env 파일에 DISCORD_BOT_TOKEN 값을 설정해주세요.")

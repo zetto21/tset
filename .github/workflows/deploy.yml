@@ -1,0 +1,40 @@
+name: Deploy Discord Bot
+
+on:
+  push:
+    branches:
+      - main # main 브랜치에 코드가 푸시될 때마다 작동
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to Server via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: 22
+        script: |
+          # == 실제 서버에 접속해서 실행할 리눅스 명령어들 ==
+          
+          # 1. 서버 내에 코드가 있는 폴더로 이동 (본인 서버의 실제 폴더 경로로 변경하세요!)
+          cd /home/ubuntu/tset || mkdir -p /home/ubuntu/tset && cd /home/ubuntu/tset
+          
+          # 최초 클론이 안 되어 있다면 클론, 되어 있다면 풀
+          if [ ! -d ".git" ]; then
+            git clone https://github.com/zetto21/tset.git .
+          else
+            git pull origin main
+          fi
+          
+          # 2. 패키지 설치
+          pip3 install -r requirements.txt
+          
+          # 3. 기존에 돌아가던 봇 강제 종료 (에러 무시)
+          pkill -f "python3 main.py" || true
+          
+          # 4. 백그라운드(nohup)로 봇 다시 켜기
+          nohup python3 main.py > bot.log 2>&1 &
